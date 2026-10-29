@@ -1,13 +1,48 @@
 
 export const courses = [
-    {
-      code: "CMSC 201",
-      title: "Computer Science I",
-      credits: 4,
-      department: "Computer Science",
-      description: "Introduction to programming.",
-      prerequisites: [],
-      terms: ["Fall", "Spring"]
-    } // add more courses here
-  ];
-  
+  {
+    code: "CMSC 201",
+    title: "Computer Science I",
+    credits: 4,
+    department: "Computer Science",
+    description: "Introduction to programming.",
+    prerequisites: [],
+    terms: ["Fall", "Spring"],
+  },
+  {
+    code: "CMSC 202",
+    title: "Computer Science II",
+    credits: 4,
+    department: "Computer Science",
+    description: "Object-oriented programming.",
+    prerequisites: ["CMSC 201"],
+    terms: ["Fall", "Spring"],
+  },
+  {
+    code: "CMSC 341",
+    title: "Data Structures",
+    credits: 4,
+    department: "Computer Science",
+    description: "Lists, stacks, queues, trees, and graphs.",
+    prerequisites: ["CMSC 202", "MATH 151"],
+    terms: ["Fall", "Spring"],
+  },
+  {
+    code: "CMSC 441",
+    title: "Algorithms",
+    credits: 4,
+    department: "Computer Science",
+    description: "Analysis and design of algorithms.",
+    prerequisites: ["CMSC 341"],
+    terms: ["Fall", "Spring"],
+  },
+  {
+    code: "MATH 151",
+    title: "Calculus I",
+    credits: 4,
+    department: "Mathematics",
+    description: "Limits, derivatives, and integration.",
+    prerequisites: [],
+    terms: ["Fall", "Spring"],
+  },
+];
