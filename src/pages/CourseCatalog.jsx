@@ -14,7 +14,41 @@ export default function CourseCatalog() {
   return (
     <div>
       <h1>Course Catalog</h1>
-      <h2>Coming Soon</h2>
+
+      <input
+        type="text"
+        placeholder="Search courses..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <table>
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Title</th>
+            <th>Credits</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {filteredCourses.map((course) => (
+            <tr key={course.code}>
+              <td>{course.code}</td>
+              <td>{course.title}</td>
+              <td>{course.credits}</td>
+              <td>
+                <Link to={`/catalog/${encodeURIComponent(course.code)}`}>
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {filteredCourses.length === 0 && <p>No matching courses found.</p>}
     </div>
   );
 }
