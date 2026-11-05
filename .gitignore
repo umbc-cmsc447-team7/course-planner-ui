@@ -23,4 +23,30 @@ dist-ssr
 *.sln
 *.sw?
 
+# Env files (keep examples)
 .env
+.env.*
+!.env.example
+
+# AI assistant tooling (Cursor, Claude)
+.cursor/
+.cursorrules
+.cursorignore
+.cursorindexingignore
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.claude.json
+.mcp.json
+.specstory/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
