@@ -18,9 +18,8 @@ const features = [
     label: "Explore courses",
   },
   {
-    title: "Prerequisite graph",
-    description:
-      "See how courses connect and understand the path to your next class.",
+    title: "My academic record",
+    description: "See your academic history and progress.",
     icon: GitBranch,
   },
   {

@@ -285,6 +285,10 @@
     padding: 26px;
   }
   
+  .courses-graph-section {
+    margin-top: 24px;
+  }
+
   .courses-description {
     margin-bottom: 0;
     color: #43556b;

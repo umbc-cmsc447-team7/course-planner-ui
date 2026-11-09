@@ -1,0 +1,78 @@
+.prereq-graph {
+  height: 420px;
+  margin-top: 16px;
+  border: 1px solid #dde7ef;
+  border-radius: 10px;
+  background: #fafcfe;
+}
+
+.prereq-node {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 170px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #18273b;
+  font-size: 13px;
+}
+
+.prereq-node a {
+  color: #216b64;
+  font-weight: 700;
+}
+
+.prereq-node-title {
+  overflow: hidden;
+  color: #596a7e;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prereq-node.is-target {
+  border-color: #216b64;
+  background: #216b64;
+  color: white;
+}
+
+.prereq-node.is-target .prereq-node-title {
+  color: #d5ebe8;
+}
+
+.prereq-node.is-negative {
+  border-color: #c2413b;
+  background: #fdf1f0;
+}
+
+.prereq-node-flag {
+  color: #c2413b;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.prereq-node.status-satisfied {
+  border-color: #2f8a4c;
+  background: #eef8f1;
+}
+
+.prereq-node.status-unmet {
+  border-color: #c2413b;
+  background: #fdf1f0;
+}
+
+.prereq-operator {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 52px;
+  border: 1px solid #263c55;
+  border-radius: 50%;
+  background: #eaf0f6;
+  color: #263c55;
+  font-size: 12px;
+  font-weight: 800;
+}
