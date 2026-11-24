@@ -262,20 +262,15 @@ export default function CourseDetails() {
             </section>
           </div>
 
-          {!rulesError && roots.length > 0 && (
-            <section className="courses-panel courses-section courses-graph-section">
-              <h2>Prerequisite graph</h2>
-              <p className="courses-muted">
-                Arrows point from each prerequisite toward this course. Select a
-                course to open its details.
-              </p>
-              <PrereqGraph
-                course={course}
-                groups={groups}
-                prerequisiteCourses={prerequisiteCourses}
-              />
-            </section>
-          )}
+          <section className="courses-panel courses-section courses-graph-section">
+            <h2>Prerequisite graph</h2>
+            <p className="courses-muted">
+              The full chain of prerequisites leading to this course. Arrows
+              point toward the course that needs them; AND means all are
+              required, OR means one is. Select a course to open its details.
+            </p>
+            <PrereqGraph courseId={course.course_id} />
+          </section>
         </>
       )}
     </section>

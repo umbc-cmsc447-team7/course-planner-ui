@@ -1,5 +1,5 @@
 .prereq-graph {
-  height: 420px;
+  height: 520px;
   margin-top: 16px;
   border: 1px solid #dde7ef;
   border-radius: 10px;
@@ -42,26 +42,17 @@
   color: #d5ebe8;
 }
 
-.prereq-node.is-negative {
-  border-color: #c2413b;
-  background: #fdf1f0;
+.prereq-graph .react-flow__handle {
+  opacity: 0;
 }
 
-.prereq-node-flag {
-  color: #c2413b;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
+.prereq-graph .react-flow__edge.is-negative .react-flow__edge-path {
+  stroke: #c2413b;
+  stroke-dasharray: 4 3;
 }
 
-.prereq-node.status-satisfied {
-  border-color: #2f8a4c;
-  background: #eef8f1;
-}
-
-.prereq-node.status-unmet {
-  border-color: #c2413b;
-  background: #fdf1f0;
+.prereq-graph .react-flow__edge-text {
+  font-size: 11px;
 }
 
 .prereq-operator {

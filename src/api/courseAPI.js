@@ -1,4 +1,4 @@
-import { apiGet } from "./client";
+import { apiGet, GRAPH_API_URL } from "./client";
 
 export const PAGE_SIZE = 20;
 
@@ -26,4 +26,20 @@ export async function getPrerequisiteGroups(course_id) {
     groups: groups ?? [],
     prerequisiteCourses: prerequisiteCourses ?? {},
   };
+}
+
+// Team B's graph service: the course plus every prerequisite above it, in
+// Cytoscape.js JSON ({ elements: { nodes, edges } }). Returns null when the
+// course is not in their graph.
+export async function getPrereqGraph(course_id) {
+  try {
+    return await apiGet(
+      `/prereq-graph/${encodeURIComponent(course_id)}`,
+      {},
+      GRAPH_API_URL
+    );
+  } catch (error) {
+    if (error.status === 404) return null;
+    throw error;
+  }
 }
