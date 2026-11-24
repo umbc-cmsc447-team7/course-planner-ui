@@ -1,5 +1,5 @@
 import dagre from "@dagrejs/dagre";
-import { MarkerType } from "@xyflow/react";
+import { MarkerType, Position } from "@xyflow/react";
 
 const COURSE_SIZE = { width: 170, height: 52 };
 const OPERATOR_SIZE = { width: 56, height: 52 };
@@ -77,6 +77,33 @@ export function layoutGraph(nodes, edges) {
 
   return nodes.map((n) => {
     const { x, y, width, height } = g.node(n.id);
-    return { ...n, position: { x: x - width / 2, y: y - height / 2 } };
+    // Width, height, and handles have to be on the node up front. React Flow
+    // will not draw edges until it knows them, and a controlled flow does not
+    // keep the measured sizes unless they are already here.
+    return {
+      ...n,
+      width,
+      height,
+      measured: { width, height },
+      handles: [
+        {
+          type: "target",
+          position: Position.Left,
+          x: 0,
+          y: height / 2,
+          width: 1,
+          height: 1,
+        },
+        {
+          type: "source",
+          position: Position.Right,
+          x: width,
+          y: height / 2,
+          width: 1,
+          height: 1,
+        },
+      ],
+      position: { x: x - width / 2, y: y - height / 2 },
+    };
   });
 }

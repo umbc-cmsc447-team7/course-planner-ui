@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Background,
@@ -6,6 +6,8 @@ import {
   Handle,
   Position,
   ReactFlow,
+  useEdgesState,
+  useNodesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { getPrereqGraph } from "../api/courseAPI";
@@ -58,16 +60,22 @@ const nodeTypes = { course: CourseNode, operator: OperatorNode };
 
 function GraphCanvas({ graphData, courseId }) {
   const navigate = useNavigate();
-  const { nodes, edges } = useMemo(() => {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  useEffect(() => {
     const graph = buildPrereqGraph(graphData, courseId);
-    return { nodes: layoutGraph(graph.nodes, graph.edges), edges: graph.edges };
-  }, [graphData, courseId]);
+    setNodes(layoutGraph(graph.nodes, graph.edges));
+    setEdges(graph.edges);
+  }, [graphData, courseId, setNodes, setEdges]);
 
   return (
     <div className="prereq-graph">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         nodesDraggable={false}
         nodesConnectable={false}

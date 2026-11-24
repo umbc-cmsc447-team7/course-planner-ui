@@ -1,93 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getCourse, getPrerequisiteGroups } from "../api/courseAPI";
+import { getCourse } from "../api/courseAPI";
 import PrereqGraph from "../components/PrereqGraph";
 import "./Courses.css";
-
-function PrerequisiteGroup({
-  group,
-  groups,
-  prerequisiteCourses,
-  ancestors = [],
-}) {
-  const id = group.prerequisite_group_id;
-
-  if (ancestors.includes(id)) {
-    return (
-      <p role="alert">This prerequisite rule contains a circular reference.</p>
-    );
-  }
-
-  const children = groups.filter((item) => item.parent_group_id === id);
-  const prerequisites = group.prerequisites ?? [];
-  const operator = group.group_operator?.toUpperCase();
-
-  return (
-    <div className="courses-rule">
-      <p className="courses-rule-label">
-        {operator === "AND"
-          ? "All of the following"
-          : operator === "OR"
-            ? "At least one of the following"
-            : "Rule operator unavailable"}
-      </p>
-
-      {!children.length && !prerequisites.length && (
-        <p>No requirements have been entered in this group.</p>
-      )}
-
-      <ul>
-        {prerequisites.map((prerequisite) => {
-          const course =
-            prerequisiteCourses[prerequisite.prerequisite_course_id];
-
-          return (
-            <li key={prerequisite.prerequisite_id}>
-              {prerequisite.negative_prerequisite && (
-                <strong>Must not have completed: </strong>
-              )}
-
-              {course ? (
-                <Link
-                  to={`/catalog/${encodeURIComponent(course.course_identifier)}`}
-                >
-                  {course.course_identifier} — {course.course_title}
-                </Link>
-              ) : (
-                <span>
-                  Course ID {prerequisite.prerequisite_course_id} (details
-                  unavailable)
-                </span>
-              )}
-
-              <div className="courses-rule-notes">
-                {prerequisite.min_grade && (
-                  <span>
-                    Required grade: {prerequisite.min_grade} or better
-                  </span>
-                )}
-                {prerequisite.concurrent_allowed && (
-                  <span>Concurrent enrollment allowed</span>
-                )}
-              </div>
-            </li>
-          );
-        })}
-
-        {children.map((child) => (
-          <li key={child.prerequisite_group_id}>
-            <PrerequisiteGroup
-              group={child}
-              groups={groups}
-              prerequisiteCourses={prerequisiteCourses}
-              ancestors={[...ancestors, id]}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export default function CourseDetails() {
   const { code } = useParams();
@@ -96,9 +11,6 @@ export default function CourseDetails() {
     course: null,
     loading: true,
     error: "",
-    groups: [],
-    prerequisiteCourses: {},
-    rulesError: "",
   });
 
   useEffect(() => {
@@ -109,29 +21,14 @@ export default function CourseDetails() {
         course: null,
         loading: true,
         error: "",
-        groups: [],
-        prerequisiteCourses: {},
-        rulesError: "",
       });
 
       try {
         const course = await getCourse(code);
-        let rules = { groups: [], prerequisiteCourses: {} };
-        let rulesError = "";
-
-        if (course) {
-          try {
-            rules = await getPrerequisiteGroups(course.course_id);
-          } catch (error) {
-            rulesError = error.message || "Unable to load prerequisite rules.";
-          }
-        }
 
         if (active) {
           setState({
             course,
-            ...rules,
-            rulesError,
             loading: false,
             error: "",
           });
@@ -153,9 +50,7 @@ export default function CourseDetails() {
     };
   }, [code, retry]);
 
-  const { course, loading, error, groups, prerequisiteCourses, rulesError } =
-    state;
-  const roots = groups.filter((group) => group.parent_group_id == null);
+  const { course, loading, error } = state;
 
   return (
     <section className="courses-page">
@@ -214,53 +109,13 @@ export default function CourseDetails() {
             </dl>
           </header>
 
-          <div className="courses-detail-grid">
-            <section className="courses-panel courses-section">
-              <h2>About this course</h2>
-              <p className="courses-description">
-                {course.course_description?.trim() ||
-                  "A description has not been added for this course."}
-              </p>
-            </section>
-
-            <section className="courses-panel courses-section">
-              <h2>Prerequisite requirements</h2>
-              <p className="courses-muted">
-                Catalog rules are shown below. Your grades and transfer credits
-                must be evaluated separately to determine eligibility.
-              </p>
-
-              {rulesError ? (
-                <p role="alert">
-                  Prerequisite information is unavailable: {rulesError}
-                </p>
-              ) : groups.length === 0 ? (
-                <p>No prerequisite rules are recorded in the catalog.</p>
-              ) : roots.length === 0 ? (
-                <p role="alert">
-                  Prerequisite groups are recorded, but their hierarchy is
-                  incomplete. Eligibility cannot be determined here.
-                </p>
-              ) : (
-                <>
-                  {roots.length > 1 && (
-                    <p className="courses-muted">
-                      Multiple top-level groups are recorded. Their combined
-                      interpretation must be confirmed by the catalog service.
-                    </p>
-                  )}
-                  {roots.map((group) => (
-                    <PrerequisiteGroup
-                      key={group.prerequisite_group_id}
-                      group={group}
-                      groups={groups}
-                      prerequisiteCourses={prerequisiteCourses}
-                    />
-                  ))}
-                </>
-              )}
-            </section>
-          </div>
+          <section className="courses-panel courses-section">
+            <h2>About this course</h2>
+            <p className="courses-description">
+              {course.course_description?.trim() ||
+                "A description has not been added for this course."}
+            </p>
+          </section>
 
           <section className="courses-panel courses-section courses-graph-section">
             <h2>Prerequisite graph</h2>
