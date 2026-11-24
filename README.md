@@ -2,7 +2,7 @@
 
 A web application for UMBC students to browse courses, view prerequisites, and plan their academic schedules.
 
-Built with **React, JavaScript, and Vite** on the frontend and **Python FastAPI** on the backend. The React app never talks to Supabase directly; it calls the FastAPI endpoints under `/api`, and FastAPI reads the data from Supabase.
+Built with **React, JavaScript, and Vite**. Course data and prerequisite graphs come from Team B’s deployed API ([course-prereq-team3](https://course-prereq-team3.fastapicloud.dev/docs)). This app does not run its own backend.
 
 ## Prerequisites
 
@@ -19,47 +19,7 @@ git clone https://github.com/umbc-cmsc447-team7/course-planner-ui.git
 cd course-planner-ui
 ```
 
-**2. Set up and start the backend (FastAPI)**
-
-Requires Python 3.12+.
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env             # then fill in SUPABASE_URL and SUPABASE_ANON_KEY
-uvicorn app.main:app --reload --port 8000
-```
-
-The API runs at `http://localhost:8000`. Interactive docs are at `http://localhost:8000/docs`.
-
-| Endpoint | Description |
-| --- | --- |
-| `GET /api/health` | Health check |
-| `GET /api/courses?search=&page=` | Paginated course search (20 per page) |
-| `GET /api/courses/{course_identifier}` | One course, or 404 |
-| `GET /api/courses/{course_id}/prerequisites` | Prerequisite groups and the courses they reference |
-
-**3. Start Team B's prerequisite graph service**
-
-The "Prerequisite graph" on each course page comes from Team B's service ([ddreyer1/course-prereq-team3](https://github.com/ddreyer1/course-prereq-team3)). Clone it next to this repo and run it on port **8001**, because our backend already uses 8000:
-
-```bash
-git clone https://github.com/ddreyer1/course-prereq-team3.git
-cd course-prereq-team3
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-# .env needs SUPABASE_URL and SUPABASE_KEY (same values as our SUPABASE_URL / SUPABASE_ANON_KEY)
-uvicorn main:app --reload --port 8001
-```
-
-The graph endpoint is `GET /prereq-graph/{course_id}`. It returns the course and every prerequisite above it, in Cytoscape.js JSON. The service builds the graph once at startup, so restart it after changing prerequisite data. If it isn't running, the course pages still work and the graph section shows a "Try again" message.
-
-**4. Set up and start the frontend**
-
-In another terminal, from the repo root:
+**2. Set up and start the frontend**
 
 ```bash
 npm install
@@ -67,7 +27,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Open the localhost URL displayed in your terminal (usually `http://localhost:5173`). In development, Vite forwards `/api` requests to our backend on port 8000 and `/prereq-graph` requests to Team B's service on port 8001, so keep all three servers running. For deployed services, set `VITE_API_URL` and `VITE_GRAPH_API_URL` in `.env` to their URLs.
+Open the localhost URL displayed in your terminal (usually `http://localhost:5173`). Leave `VITE_API_URL` empty. The browser calls `/courses` and `/prereq-graph` on this app, and Vite forwards those to Team B. Their API does not send CORS headers, so do not point `VITE_API_URL` at their host.
+
+Deploy the frontend only. `vercel.json` rewrites the same two paths to Team B, then falls back to `index.html` for the app routes. Do not set `VITE_API_URL` in the Vercel project.
 
 ## Other Commands
 

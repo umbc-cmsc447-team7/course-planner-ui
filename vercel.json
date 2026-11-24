@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/courses",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/courses"
+    },
+    {
+      "source": "/courses/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/courses/:path*"
+    },
+    {
+      "source": "/prereq-graph",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/prereq-graph"
+    },
+    {
+      "source": "/prereq-graph/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/prereq-graph/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
