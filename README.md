@@ -41,9 +41,25 @@ The API runs at `http://localhost:8000`. Interactive docs are at `http://localho
 | `GET /api/courses/{course_identifier}` | One course, or 404 |
 | `GET /api/courses/{course_id}/prerequisites` | Prerequisite groups and the courses they reference |
 
-**3. Set up and start the frontend**
+**3. Start Team B's prerequisite graph service**
 
-In a second terminal, from the repo root:
+The "Prerequisite graph" on each course page comes from Team B's service ([ddreyer1/course-prereq-team3](https://github.com/ddreyer1/course-prereq-team3)). Clone it next to this repo and run it on port **8001**, because our backend already uses 8000:
+
+```bash
+git clone https://github.com/ddreyer1/course-prereq-team3.git
+cd course-prereq-team3
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+# .env needs SUPABASE_URL and SUPABASE_KEY (same values as our SUPABASE_URL / SUPABASE_ANON_KEY)
+uvicorn main:app --reload --port 8001
+```
+
+The graph endpoint is `GET /prereq-graph/{course_id}`. It returns the course and every prerequisite above it, in Cytoscape.js JSON. The service builds the graph once at startup, so restart it after changing prerequisite data. If it isn't running, the course pages still work and the graph section shows a "Try again" message.
+
+**4. Set up and start the frontend**
+
+In another terminal, from the repo root:
 
 ```bash
 npm install
@@ -51,7 +67,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open the localhost URL displayed in your terminal (usually `http://localhost:5173`). In development, Vite forwards `/api` requests to the backend on port 8000, so keep both servers running. For a deployed backend, set `VITE_API_URL` in `.env` to its URL.
+Open the localhost URL displayed in your terminal (usually `http://localhost:5173`). In development, Vite forwards `/api` requests to our backend on port 8000 and `/prereq-graph` requests to Team B's service on port 8001, so keep all three servers running. For deployed services, set `VITE_API_URL` and `VITE_GRAPH_API_URL` in `.env` to their URLs.
 
 ## Other Commands
 

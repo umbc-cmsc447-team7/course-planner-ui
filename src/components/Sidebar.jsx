@@ -6,11 +6,13 @@ import {
   Route,
   Bookmark,
   Sparkles,
+  GitBranch,
 } from "lucide-react";
 
 const navigation = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/catalog", label: "Course catalog", icon: BookOpen },
+  { to: "/record", label: "My academic record", icon: GitBranch },
   { to: "/planner", label: "Degree planner", icon: Route, upcoming: true },
   { to: "/saved", label: "Saved plans", icon: Bookmark, upcoming: true },
 ];
