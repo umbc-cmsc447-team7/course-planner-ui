@@ -17,6 +17,46 @@
       "destination": "https://course-prereq-team3.fastapicloud.dev/prereq-graph/:path*"
     },
     {
+      "source": "/users",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/users"
+    },
+    {
+      "source": "/users/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/users/:path*"
+    },
+    {
+      "source": "/historys",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/historys"
+    },
+    {
+      "source": "/historys/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/historys/:path*"
+    },
+    {
+      "source": "/auth",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/auth"
+    },
+    {
+      "source": "/auth/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/auth/:path*"
+    },
+    {
+      "source": "/plans",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/plans"
+    },
+    {
+      "source": "/plans/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/plans/:path*"
+    },
+    {
+      "source": "/terms",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/terms"
+    },
+    {
+      "source": "/terms/:path*",
+      "destination": "https://course-prereq-team3.fastapicloud.dev/terms/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -45,6 +45,12 @@ export async function getCourses(search, page) {
   };
 }
 
+// course_id -> course, for showing course history and plans by code and title.
+export async function getCatalogIndex() {
+  const catalog = await loadCatalog();
+  return new Map(catalog.map((course) => [course.course_id, course]));
+}
+
 // Routes use the course code. Team B looks up a course by numeric id, so the
 // code is resolved from the cached catalog first.
 export async function getCourse(course_identifier) {

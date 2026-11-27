@@ -1,23 +1,33 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   GraduationCap,
   LayoutDashboard,
   BookOpen,
   Route,
   Bookmark,
-  Sparkles,
   GitBranch,
+  Users,
+  UserCog,
+  LogOut,
 } from "lucide-react";
+import { useAuth } from "../auth/AuthContext";
+import { ROLE_LABELS } from "../auth/permissions";
 
+// Each role sees only its own screens.
 const navigation = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/catalog", label: "Course catalog", icon: BookOpen },
-  { to: "/record", label: "My academic record", icon: GitBranch },
-  { to: "/planner", label: "Degree planner", icon: Route, upcoming: true },
-  { to: "/saved", label: "Saved plans", icon: Bookmark, upcoming: true },
+  { to: "/record", label: "My academic record", icon: GitBranch, roles: ["student"] },
+  { to: "/planner", label: "Degree planner", icon: Route, roles: ["student"], end: true },
+  { to: "/saved", label: "Saved plans", icon: Bookmark, roles: ["student"] },
+  { to: "/students", label: "Students", icon: Users, roles: ["counselor", "admin"] },
+  { to: "/accounts", label: "All accounts", icon: UserCog, roles: ["admin"] },
 ];
 
 export default function Sidebar() {
+  const { user, role, logout } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <aside className="sidebar">
       <NavLink
@@ -37,41 +47,45 @@ export default function Sidebar() {
       <p className="sidebar-section-label">WORKSPACE</p>
 
       <nav aria-label="Main navigation">
-        {navigation.map((item) => {
-          const Icon = item.icon;
-
-          const content = (
-            <>
-              <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-              <span>{item.label}</span>
-              {item.upcoming && <span className="sidebar-soon">Soon</span>}
-            </>
-          );
-
-          return item.upcoming ? (
-            <span key={item.to} className="sidebar-nav-disabled">
-              {content}
-            </span>
-          ) : (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              {content}
-            </NavLink>
-          );
-        })}
+        {navigation
+          .filter((item) => !item.roles || item.roles.includes(role))
+          .map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
       </nav>
 
-      <div className="sidebar-footer">
-        <Sparkles size={18} aria-hidden="true" />
-        <div>
-          <strong>Start with curiosity.</strong>
-          <p>Explore a course. Discover your next step.</p>
+      {user && (
+        <div className="sidebar-user">
+          <div>
+            <strong>
+              {user.first_name} {user.last_name}
+            </strong>
+            <span>{ROLE_LABELS[role] ?? role}</span>
+          </div>
+          <button
+            type="button"
+            className="sidebar-logout"
+            onClick={() => {
+              logout();
+              navigate("/login", { replace: true });
+            }}
+          >
+            <LogOut size={16} aria-hidden="true" />
+            Sign out
+          </button>
         </div>
-      </div>
+      )}
     </aside>
   );
 }
