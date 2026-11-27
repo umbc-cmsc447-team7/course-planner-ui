@@ -6,7 +6,10 @@ import {
   Route,
   Bookmark,
   GraduationCap,
+  Users,
+  UserCog,
 } from "lucide-react";
+import { useAuth } from "../auth/AuthContext";
 
 const features = [
   {
@@ -21,27 +24,60 @@ const features = [
     title: "My academic record",
     description: "See your academic history and progress.",
     icon: GitBranch,
+    to: "/record",
+    label: "View record",
+    roles: ["student"],
   },
   {
     title: "Degree planner",
     description:
       "Organize your courses into a plan that supports your academic goals.",
     icon: Route,
+    to: "/planner",
+    label: "Start a plan",
+    roles: ["student"],
   },
   {
     title: "Saved plans",
     description:
       "Keep your academic plans together and return to them when you need.",
     icon: Bookmark,
+    to: "/saved",
+    label: "Open saved plans",
+    roles: ["student"],
+  },
+  {
+    title: "Students",
+    description:
+      "Look up a student’s profile, course history and transfer or AP credit.",
+    icon: Users,
+    to: "/students",
+    label: "Open directory",
+    roles: ["counselor", "admin"],
+  },
+  {
+    title: "All accounts",
+    description: "Review every user account and its role.",
+    icon: UserCog,
+    to: "/accounts",
+    label: "Manage accounts",
+    roles: ["admin"],
   },
 ];
 
 export default function Dashboard() {
+  const { user, role } = useAuth();
+  const visible = features.filter(
+    (feature) => !feature.roles || feature.roles.includes(role)
+  );
+
   return (
     <div className="dashboard-page">
       <header className="dashboard-hero">
         <div className="dashboard-hero-copy">
-          <p className="dashboard-eyebrow">YOUR ACADEMIC JOURNEY</p>
+          <p className="dashboard-eyebrow">
+            WELCOME BACK, {user?.first_name?.toUpperCase()}
+          </p>
           <h1>A clearer path to your degree.</h1>
           <p>
             Explore your options, understand the requirements, and take the next
@@ -68,7 +104,7 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-grid">
-          {features.map((feature) => {
+          {visible.map((feature) => {
             const Icon = feature.icon;
 
             const content = (

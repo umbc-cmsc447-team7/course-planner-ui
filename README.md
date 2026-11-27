@@ -31,6 +31,20 @@ Open the localhost URL displayed in your terminal (usually `http://localhost:517
 
 Deploy the frontend only. `vercel.json` rewrites the same two paths to Team B, then falls back to `index.html` for the app routes. Do not set `VITE_API_URL` in the Vercel project.
 
+## Login, roles and mock data
+
+Sign in with one of Team A's demo accounts (student, counselor or admin). Each role sees only its own screens, following Team A's permission matrix (`src/auth/permissions.js`).
+
+Some features wait on Team B endpoints that are not live yet. Until then they use mock data, switched in `src/api/config.js`:
+
+| Feature | Endpoint requested from Team B | Mock behavior |
+| --- | --- | --- |
+| Login | `POST /auth/login` | Looks the email up in `GET /users`; the password is not checked |
+| Term names | `GET /terms` | Fixed list in `src/api/termAPI.js` |
+| Create / save plans | `/plans` (GET, POST, PUT, DELETE) | Stored in this browser's `localStorage` |
+
+Set a flag to `false` once the endpoint is live. Edit actions for admins and counselors show as "Coming soon" until Team B adds write endpoints.
+
 ## Other Commands
 
 ```bash

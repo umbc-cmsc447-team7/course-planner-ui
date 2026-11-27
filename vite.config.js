@@ -14,9 +14,17 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         // Team B's API has no CORS headers, so the browser calls these paths
-        // on this dev server and Vite forwards them.
+        // on this dev server and Vite forwards them. App routes must not reuse
+        // these names (that is why the admin page is /accounts, not /users).
+        // /auth, /plans and /terms are requested from Team B; they are mocked
+        // until live (see src/api/config.js).
         '/courses': { target, changeOrigin: true },
         '/prereq-graph': { target, changeOrigin: true },
+        '/users': { target, changeOrigin: true },
+        '/historys': { target, changeOrigin: true },
+        '/auth': { target, changeOrigin: true },
+        '/plans': { target, changeOrigin: true },
+        '/terms': { target, changeOrigin: true },
       },
     },
   }
