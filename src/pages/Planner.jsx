@@ -9,6 +9,7 @@ import { MOCK } from "../api/config";
 import { useAuth } from "../auth/AuthContext";
 import { existingCredit, summarizeRecord } from "../lib/grades";
 import { checkPrereqs } from "../lib/prereqCheck";
+import ReasonList from "../components/ReasonList";
 import "./Courses.css";
 import "./Pages.css";
 
@@ -353,11 +354,7 @@ export default function Planner() {
                             )}
 
                             {check && check !== "error" && !check.ok && (
-                              <ul className="prereq-reasons">
-                                {check.reasons.map((reason) => (
-                                  <li key={reason}>{reason}</li>
-                                ))}
-                              </ul>
+                              <ReasonList className="prereq-reasons" reasons={check.reasons} />
                             )}
                           </div>
 

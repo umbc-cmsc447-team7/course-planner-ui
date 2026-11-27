@@ -537,3 +537,74 @@
     max-height: none;
   }
 }
+
+/* Prerequisite status (course page) */
+
+.prereq-status {
+  margin-bottom: 24px;
+  padding: 22px 26px;
+  border-left: 4px solid #bdcbd8;
+}
+
+.prereq-status.is-ok {
+  border-left-color: #2f8f6f;
+}
+
+.prereq-status.is-warn {
+  border-left-color: #d9822b;
+}
+
+.prereq-status-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.prereq-status-heading svg {
+  flex-shrink: 0;
+  margin-top: 24px;
+}
+
+.prereq-status.is-ok .prereq-status-heading svg {
+  color: #17675f;
+}
+
+.prereq-status.is-warn .prereq-status-heading svg {
+  color: #b45f0e;
+}
+
+.prereq-status-heading .courses-eyebrow {
+  margin-bottom: 6px;
+}
+
+.prereq-status-heading h2 {
+  margin-bottom: 10px;
+}
+
+.prereq-status > p {
+  margin: 0 0 0 34px;
+  font-size: 14px;
+}
+
+.prereq-status-reasons {
+  margin: 8px 0 0 34px;
+  padding-left: 18px;
+  color: #8a4609;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.prereq-status-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px !important;
+  color: #1f5f99;
+  font-size: 14px;
+}
+
+.reason-options {
+  margin: 2px 0 4px;
+  padding-left: 18px;
+  list-style: circle;
+}
