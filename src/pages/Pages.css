@@ -554,6 +554,10 @@
   border-left-color: #d9822b;
 }
 
+.prereq-status.is-unknown .prereq-status-heading svg {
+  color: #596a7e;
+}
+
 .prereq-status-heading {
   display: flex;
   align-items: flex-start;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, CheckCircle2, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle2, HelpCircle, Info } from "lucide-react";
 import { getPrereqGraph } from "../api/courseAPI";
 import { getStudentHistory } from "../api/userAPI";
 import { existingCredit, summarizeRecord } from "../lib/grades";
@@ -26,13 +26,16 @@ export default function PrereqStatus({ courseId, studentId }) {
           getStudentHistory(studentId),
         ]);
         const record = summarizeRecord(history.course_history, history.external_credits);
+        // null means Team B's graph does not have this course (404), so its
+        // prerequisites are unknown. A course with no prerequisites still
+        // comes back as a graph, just without rules.
         const check = graph
           ? checkPrereqs(graph, courseId, {
               record,
               plannedBefore: NOTHING_PLANNED,
               plannedSame: NOTHING_PLANNED,
             })
-          : { ok: true, hasPrereqs: false, reasons: [] };
+          : null;
         if (active) {
           setState({
             loading: false,
@@ -85,13 +88,15 @@ export default function PrereqStatus({ courseId, studentId }) {
   }
 
   const { check, credit } = result;
-  const tone = check.ok ? "ok" : "warn";
-  const Icon = check.ok ? CheckCircle2 : AlertTriangle;
-  const title = !check.hasPrereqs
-    ? "No prerequisites"
-    : check.ok
-      ? "You meet the prerequisites"
-      : "You don’t meet the prerequisites yet";
+  const tone = !check ? "unknown" : check.ok ? "ok" : "warn";
+  const Icon = !check ? HelpCircle : check.ok ? CheckCircle2 : AlertTriangle;
+  const title = !check
+    ? "Prerequisite information isn’t available"
+    : !check.hasPrereqs
+      ? "No prerequisites"
+      : check.ok
+        ? "You meet the prerequisites"
+        : "You don’t meet the prerequisites yet";
 
   return (
     <section className={`courses-panel prereq-status is-${tone}`} aria-labelledby="prereq-status-title">
@@ -103,14 +108,21 @@ export default function PrereqStatus({ courseId, studentId }) {
         </div>
       </div>
 
-      {!check.ok && (
+      {!check && (
+        <p className="courses-muted">
+          This course isn’t in the prerequisite data yet, so we can’t check it.
+          Ask your counselor before registering.
+        </p>
+      )}
+
+      {check && !check.ok && (
         <>
           <p className="courses-muted">Here’s what’s missing:</p>
           <ReasonList className="prereq-status-reasons" reasons={check.reasons} />
         </>
       )}
 
-      {check.ok && check.hasPrereqs && (
+      {check?.ok && check.hasPrereqs && (
         <p className="courses-muted">
           Based on your completed courses, courses in progress, and approved transfer or AP credit.
         </p>

@@ -317,7 +317,7 @@ export default function Planner() {
                       const check =
                         graph === undefined
                           ? null
-                          : graph === "error"
+                          : graph === "error" || graph === null
                             ? "error"
                             : checkPrereqs(graph, id, { record, plannedBefore: before, plannedSame: same });
                       const credit = existingCredit(record, id);
@@ -337,7 +337,9 @@ export default function Planner() {
                             {check === null ? (
                               <span className="prereq-badge">Checking prerequisites…</span>
                             ) : check === "error" ? (
-                              <span className="prereq-badge">Couldn’t check prerequisites</span>
+                              <span className="prereq-badge">
+                                {graph === null ? "Prerequisite info unavailable" : "Couldn’t check prerequisites"}
+                              </span>
                             ) : check.ok ? (
                               <span className="prereq-badge ok">
                                 <CheckCircle2 size={14} aria-hidden="true" />
