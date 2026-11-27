@@ -9,6 +9,7 @@ import { MOCK } from "../api/config";
 import { useAuth } from "../auth/AuthContext";
 import { existingCredit, summarizeRecord } from "../lib/grades";
 import { checkPrereqs } from "../lib/prereqCheck";
+import ReasonList from "../components/ReasonList";
 import "./Courses.css";
 import "./Pages.css";
 
@@ -316,7 +317,7 @@ export default function Planner() {
                       const check =
                         graph === undefined
                           ? null
-                          : graph === "error"
+                          : graph === "error" || graph === null
                             ? "error"
                             : checkPrereqs(graph, id, { record, plannedBefore: before, plannedSame: same });
                       const credit = existingCredit(record, id);
@@ -336,7 +337,9 @@ export default function Planner() {
                             {check === null ? (
                               <span className="prereq-badge">Checking prerequisites…</span>
                             ) : check === "error" ? (
-                              <span className="prereq-badge">Couldn’t check prerequisites</span>
+                              <span className="prereq-badge">
+                                {graph === null ? "Prerequisite info unavailable" : "Couldn’t check prerequisites"}
+                              </span>
                             ) : check.ok ? (
                               <span className="prereq-badge ok">
                                 <CheckCircle2 size={14} aria-hidden="true" />
@@ -353,11 +356,7 @@ export default function Planner() {
                             )}
 
                             {check && check !== "error" && !check.ok && (
-                              <ul className="prereq-reasons">
-                                {check.reasons.map((reason) => (
-                                  <li key={reason}>{reason}</li>
-                                ))}
-                              </ul>
+                              <ReasonList className="prereq-reasons" reasons={check.reasons} />
                             )}
                           </div>
 

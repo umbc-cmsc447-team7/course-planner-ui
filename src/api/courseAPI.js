@@ -71,12 +71,20 @@ export async function getCourse(course_identifier) {
 
 // Team B's graph: the course plus every prerequisite above it, in
 // Cytoscape.js JSON ({ elements: { nodes, edges } }). Returns null when the
-// course is not in their graph.
-export async function getPrereqGraph(course_id) {
-  try {
-    return await apiGet(`/prereq-graph/${encodeURIComponent(course_id)}`);
-  } catch (error) {
-    if (error.status === 404) return null;
-    throw error;
+// course is not in their graph. Cached per course, so the graph view and the
+// prerequisite status panel share one request.
+const graphRequests = new Map();
+
+export function getPrereqGraph(course_id) {
+  const key = String(course_id);
+  if (!graphRequests.has(key)) {
+    const request = apiGet(`/prereq-graph/${encodeURIComponent(course_id)}`)
+      .catch((error) => {
+        if (error.status === 404) return null;
+        graphRequests.delete(key);
+        throw error;
+      });
+    graphRequests.set(key, request);
   }
+  return graphRequests.get(key);
 }

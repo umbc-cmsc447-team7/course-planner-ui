@@ -1,5 +1,10 @@
 import { bestGrade, meetsMinimum } from "./grades";
 
+// An unmet OR group is reported as one reason: ONE_OF_PREFIX + options joined
+// by OR_SEPARATOR. ReasonList splits it back into a list for display.
+export const ONE_OF_PREFIX = "Needs one of: ";
+export const OR_SEPARATOR = " OR ";
+
 // Checks one planned course against Team B's prerequisite graph
 // (GET /prereq-graph/{course_id}, Cytoscape JSON). Edges point from a
 // prerequisite (course or group) to the group or course that needs it; the
@@ -89,7 +94,7 @@ export function checkPrereqs(graph, courseId, ctx) {
       const options = results.flatMap((r) => r.reasons);
       return {
         ok: false,
-        reasons: [options.length > 1 ? `Needs one of: ${options.join(" OR ")}` : options[0]],
+        reasons: [options.length > 1 ? ONE_OF_PREFIX + options.join(OR_SEPARATOR) : options[0]],
       };
     }
     return {

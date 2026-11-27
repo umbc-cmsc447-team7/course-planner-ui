@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCourse } from "../api/courseAPI";
 import PrereqGraph from "../components/PrereqGraph";
+import PrereqStatus from "../components/PrereqStatus";
+import { useAuth } from "../auth/AuthContext";
 import "./Courses.css";
 
 export default function CourseDetails() {
   const { code } = useParams();
+  const { role, studentProfile } = useAuth();
   const [retry, setRetry] = useState(0);
   const [state, setState] = useState({
     course: null,
@@ -108,6 +111,13 @@ export default function CourseDetails() {
               </div>
             </dl>
           </header>
+
+          {role === "student" && studentProfile && (
+            <PrereqStatus
+              courseId={course.course_id}
+              studentId={studentProfile.student_id}
+            />
+          )}
 
           <section className="courses-panel courses-section">
             <h2>About this course</h2>
