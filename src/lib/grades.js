@@ -11,9 +11,11 @@ export function meetsMinimum(grade, minGrade) {
   return RANK[grade] >= (RANK[minGrade] ?? Infinity);
 }
 
-// Best of several attempts. Letter grades beat P; anything beats W/I/none.
+// Best of several attempts. P counts as a pass at the C level (it satisfies a
+// minimum of C or below), so it ranks below A, B and C but above D and F.
+// Anything beats W/I/none.
 export function bestGrade(grades) {
-  const score = (g) => (g in RANK ? RANK[g] + 1 : g === "P" ? 0.5 : -1);
+  const score = (g) => (g in RANK ? RANK[g] + 1 : g === "P" ? RANK.C + 0.5 : -1);
   return grades.reduce(
     (best, g) => (best == null || score(g) > score(best) ? g : best),
     null

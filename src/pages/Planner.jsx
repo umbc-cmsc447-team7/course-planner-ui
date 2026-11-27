@@ -70,6 +70,8 @@ export default function Planner() {
           record: summarizeRecord(history.course_history, history.external_credits),
         });
         setPlan(saved ? { name: saved.name, terms: saved.terms } : emptyPlan(terms));
+        setTargetTerm("");
+        setNewTerm("");
         setDirty(false);
       } catch (error) {
         if (active) setBase({ loading: false, error: error.message || "Unable to load the planner." });
@@ -125,7 +127,11 @@ export default function Planner() {
   }
 
   function addCourse(courseId) {
-    const termId = Number(targetTerm || plan.terms[0]?.term_id);
+    // Fall back to the first term if the selected one is not in this plan.
+    const selected = Number(targetTerm);
+    const termId = plan.terms.some((t) => t.term_id === selected)
+      ? selected
+      : plan.terms[0]?.term_id;
     if (!termId) {
       setNotice("Add a term to the plan first.");
       return;
@@ -415,7 +421,11 @@ export default function Planner() {
           <label htmlFor="planner-target">Add to</label>
           <select
             id="planner-target"
-            value={targetTerm || plan.terms[0]?.term_id || ""}
+            value={
+              plan.terms.some((t) => t.term_id === Number(targetTerm))
+                ? targetTerm
+                : plan.terms[0]?.term_id ?? ""
+            }
             onChange={(event) => setTargetTerm(event.target.value)}
             disabled={plan.terms.length === 0}
           >
